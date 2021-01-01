@@ -1,5 +1,5 @@
 # GANdam
-'GANdam' is a gan model that generates new gundam images.
+'GANdam' generates new gundam images with GAN(Generative Adversarial Networks).
 
 With 'GANdam', you can generate numerous Mobile Suit designs that draws back to your childhood memories.
 
