@@ -5,7 +5,8 @@ With 'GANdam', you can generate numerous Mobile Suit designs that draws back to 
 
 
 # Results
-
+![36image](https://user-images.githubusercontent.com/59949284/103440547-e7e97780-4c89-11eb-831a-55fa35f50024.png)
+Examples of generated images
 
 # Walking through the latent space
 ![sample1](https://user-images.githubusercontent.com/59949284/103439926-a60a0280-4c84-11eb-8b5e-a14aa55ae2a8.gif)
