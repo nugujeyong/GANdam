@@ -6,8 +6,6 @@ With 'GANdam', you can generate numerous Mobile Suit designs that draws back to 
 [https://github.com/nugujeyong/GANdam](https://github.com/nugujeyong/GANdam)
 ## Results
 ![36image](https://user-images.githubusercontent.com/59949284/103440547-e7e97780-4c89-11eb-831a-55fa35f50024.png)
-Examples of generated images
-
 ![sample14](https://user-images.githubusercontent.com/59949284/103458054-c4850200-4d47-11eb-8e5b-4c8d13cc3423.png)
 ![sample30](https://user-images.githubusercontent.com/59949284/103458055-c64ec580-4d47-11eb-980f-dd6bed7bea98.png)
 ![sample80](https://user-images.githubusercontent.com/59949284/103458057-c77ff280-4d47-11eb-8980-dc22f2775a6a.png)
