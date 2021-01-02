@@ -1,5 +1,5 @@
 # GANdam
-'GANdam' generates new gundam images with GAN(Generative Adversarial Networks).
+'GANdam' generates new gundam images with WGAN-GP
 
 With 'GANdam', you can generate numerous Mobile Suit designs that draws back to your childhood memories.
 
@@ -28,5 +28,6 @@ cd "folder_to_the_project"
 python save_npy.py
 python gandam.py
 ```
+
 
 
