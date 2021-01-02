@@ -34,8 +34,8 @@ class WGAN():
         self.H = 128
         self.C = 3 
         self.CHECKPOINT = 50
-        Datapath = "./gunimdata128.npy"
-        Datapath2 = "./augimdata128.npy"
+        Datapath = "./gunimdata.npy"
+        Datapath2 = "./augimdata.npy"
         self.load_npy(Datapath,Datapath2)
 
         self.build_discriminator()
@@ -79,53 +79,31 @@ class WGAN():
         self.X_train = self.X_train[:int((amount_of_data)*float(len(self.X_train)))]
         self.X_train=(self.X_train.astype(np.float32) - 127.5)/127.5
         self.X_train=np.expand_dims(self.X_train, axis=3)
-#################################3
+
         self.Xaug_train = np.load(npy_path2)
         self.Xaug_train = self.Xaug_train[:int((amount_of_data)*float(len(self.Xaug_train)))]
         self.Xaug_train=(self.Xaug_train.astype(np.float32) - 127.5)/127.5
         self.Xaug_train=np.expand_dims(self.Xaug_train, axis=3)
-##################################
-        
-        
-        #print(np.shape(self.Xaug_train))
-        #exit()
+
         return 
 
-    def load_images(self, data_dir, image_shape):
+    def save_npy(self, data_dir, image_shape):
         images = None
         augimages = None
         image_paths = [f for f in listdir(data_dir) if isfile(join(data_dir, f))]
-        #print(image_paths)
-        #exit()
+
         for i, image_path in enumerate(image_paths):
             print("loading_image:{}".format(i))
             try:
                 # Load image
                 loaded_image = image.load_img(os.path.join(data_dir, image_path), target_size=image_shape)
-               
                 #augment image
                 aug = iaa.Sequential([ iaa.ChangeColorTemperature((1100, 10000)), iaa.TranslateX(px=(-2, 2)) ])
-                
-                
                 # Convert PIL image to numpy ndarray
-                #loaded_image = image.img_to_array(loaded_image)
                 loaded_image = np.array(loaded_image)
-               
-                
-                
-                    
-
-
-                
-               
-                    
-                    
-                
                 # Add another dimension (Add batch dimension)
                 loaded_image = np.expand_dims(loaded_image, axis=0)
                 augimg = aug.augment_images(loaded_image.astype(np.uint8))
-                
-                
                 # Concatenate all images into one tensor
                 if images is None:
                     images = loaded_image
@@ -142,10 +120,9 @@ class WGAN():
             except Exception as e:
                 print("Error:", i, e)
         
-        np.save('gunimdata128.npy',images)
-        np.save('augimdata128.npy',augimages)
-        exit()
-        return images
+        np.save('gunimdata.npy',images)
+        np.save('augimdata.npy',augimages)
+       
 
 
     def build_discriminator(self):
@@ -184,11 +161,11 @@ class WGAN():
         x=Conv2DTranspose(filters=64, kernel_size = 5, strides= 2, padding = 'same', name = 'conv_gen_3', kernel_initializer = self.weight_init)(x)
         x=BatchNormalization(momentum=0.9)(x)
         x=LeakyReLU(alpha=0.2)(x)
-#added
+
         x=Conv2DTranspose(filters=64, kernel_size = 5, strides= 2, padding = 'same', name = 'conv_gen_4', kernel_initializer = self.weight_init)(x)
         x=BatchNormalization(momentum=0.9)(x)
         x=LeakyReLU(alpha=0.2)(x)
-#
+
         x=Conv2DTranspose(filters = 3, kernel_size = 5, strides = 2, padding = 'same', activation = 'tanh', name= 'conv_gen_5', kernel_initializer = self.weight_init)(x)
         generator_output = x
         self.generator = Model(generator_input, generator_output)
@@ -249,6 +226,10 @@ class WGAN():
         dis_intpol = []
         gen_list = []
         g_p = []
+        directory = './weight'
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+            print("Directory folder Created ")
         for epoch in range(epochs):
             b=0
             disc_loss = []
@@ -274,8 +255,7 @@ class WGAN():
                 x_batch = real_images_raw.reshape(count_real_images,
                                             self.W, self.H, self.C)
                 x_batch = np.concatenate([x_batch,x_aug_batch],axis=0)
-                #print(x_batch.shape)
-               # exit()
+               
                 noise = np.random.normal(0, 1, (batch_size, 100))
                 for _ in range(5):
                     valid = np.ones((batch_size,1), dtype=np.float32)
@@ -288,10 +268,7 @@ class WGAN():
                 disc_loss.append(d_loss)
                 gen_loss.append(g_loss)
             
-            # disc_loss_r = sum(disc_loss[:][0])/len(disc_loss)
-            # disc_loss_f = sum(disc_loss[:][1])/len(disc_loss)
-            # disc_loss_i = sum(disc_loss[:][2])/len(disc_loss)
-            # grad_pen = sum(disc_loss[:][3])/len(disc_loss)
+            
             dis_sum = np.sum(disc_loss, 0)
             gen_loss = sum(gen_loss)/len(gen_loss)
                 
@@ -324,24 +301,26 @@ class WGAN():
             if epoch % self.CHECKPOINT == 0:
                 label = str(epoch)
                 self.plot_checkpoint(label)
-                self.generator.save_weights("./weight/generator128/mainmodel_epoch_{}.h5".format(epoch))
-                self.critic_model.save_weights("./weight/critic128/critic_epoch_{}.h5".format(epoch))
-                        #self.plot_checkpoint(epoch)
-
-            # Save networks
+                self.generator.save_weights("./weight/generator_epoch_{}.h5".format(epoch))
+                
+    
+        # Save networks
         try:
-            self.generator.save_weights("./weight/generator128/mainmodel_epoch_{}.h5".format(epoch))
-            self.critic_model.save_weights("./weight/critic128/critic_epoch_{}.h5".format(epoch))
+            self.generator.save_weights("./weight/generator_epoch_{}.h5".format(epoch))
+            
         except Exception as e:
             print("Error:", e)
         return
 
 
     def plot_checkpoint(self,e):
-            filename = "./data128/sample_"+str(e)+".png"
+            directory = './results'
+            if not os.path.exists(directory):
+                os.mkdir(directory)
+                print("Directory folder Created ")
+            filename = "./results/sample_"+str(e)+".png"
             
             noise = np.random.normal(0, 1, (16, 100))
-            #noise = self.sample_latent_space(16)
             images = self.generator.predict(noise)
             
             plt.figure(figsize=(10,10))
@@ -379,26 +358,11 @@ class WGAN():
 
    
 
-    def test(self):
-        self.generator.load_weights("./weight/generator128/mainmodel_epoch_11000.h5")
+    def test(self,epoch):
+        self.generator.load_weights("./weight/generator_epoch_{}.h5".format(epoch))
         noise = np.random.normal(0, 1, (36, 100))
         images = self.generator.predict(noise)
-        # for case in range(10):
-        #     ims = np.random.normal(0, 1, (100, 100))
-    
         
-            #ims = self.interpolate_points(noise[0],noise[1])
-    
-            #ims = self.generator.predict(ims)
-            
-            # for i in range(10):
-                
-            #     im = np.reshape(ims[i], [self.H,self.W,self.C])
-            #     im = image.array_to_img(im)
-               
-            #     plt.imshow(im)
-            #     plt.axis('off')
-            #     plt.savefig('sample'+str(case)+str(i)+'.png')
                 
 
         filename = "36image.png"
@@ -422,6 +386,6 @@ class WGAN():
         plt.savefig(filename)
         plt.close('all')
         
-#WGAN().load_images("./Gundam_Image",(128,128))
-#WGAN().train(32, 100000)
-WGAN().test()
+
+WGAN().train(32, 100000)
+#WGAN().test(10000)
