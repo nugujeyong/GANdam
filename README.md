@@ -3,7 +3,7 @@
 
 With 'GANdam', you can generate numerous Mobile Suit designs that draws back to your childhood memories.
 
-
+https://github.com/nugujeyong/GANdam
 # Results
 ![36image](https://user-images.githubusercontent.com/59949284/103440547-e7e97780-4c89-11eb-831a-55fa35f50024.png)
 Examples of generated images
