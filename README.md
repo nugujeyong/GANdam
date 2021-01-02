@@ -17,9 +17,7 @@ Examples of generated images
 
 
 # Dataset
-Images from https://gundam.fandom.com/wiki/The_Gundam_Wiki
-
-I mostly used Mobile Suit images, so some of the images(ex.Mobile Armor) were excluded. 
+Images from [Gundam Wiki](https://gundam.fandom.com/wiki/The_Gundam_Wiki)
 
 Total 1241 images were used for training.
 
