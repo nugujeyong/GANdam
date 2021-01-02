@@ -22,10 +22,10 @@ Images from [Gundam Wiki](https://gundam.fandom.com/wiki/The_Gundam_Wiki)
 Total 1241 images were used for training.
 
 ## Training
-'''
+```
 cd "folder_to_the_project"
 python save_npy.py
 python gandam.py
-'''
+```
 
 
