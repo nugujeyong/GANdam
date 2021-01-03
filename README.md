@@ -24,7 +24,7 @@ Total 1241 images were used for training.
 
 ## Training
 ```
-cd "folder_to_the_project"
+cd "path_to_the_folder"
 python save_npy.py
 python gandam.py
 ```
